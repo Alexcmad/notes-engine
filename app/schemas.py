@@ -15,7 +15,7 @@ class Wiki(BaseModel):
 class FileContent(BaseModel):
     filename: str
     content: str
-    keywords: str
+    keywords: list
 
 
 class GPTSummary(BaseModel):
