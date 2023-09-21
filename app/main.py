@@ -17,7 +17,7 @@ def root() -> dict:
     return {"status": "working"}
 
 
-@app.get('/wiki/{term}', response_model=schemas.Wiki)
+@app.get('/wiki', response_model=schemas.Wiki)
 def wiki_search(search_term: str) -> dict:
     """
 
@@ -28,7 +28,7 @@ def wiki_search(search_term: str) -> dict:
     return wiki_data
 
 
-@app.get('/generate/terms/{term}', response_model=schemas.Keywords)
+@app.get('/generate/terms', response_model=schemas.Keywords)
 def generate_terms(search_term: str) -> dict:
     """
 
@@ -39,7 +39,7 @@ def generate_terms(search_term: str) -> dict:
     return generated_terms
 
 
-@app.get('/generate/summary/{keyword}/{search_term}', response_model=schemas.GPTSummary)
+@app.get('/generate/summary', response_model=schemas.GPTSummary)
 def generate_summary(search_term: str, keyword: str) -> dict:
     """
 
