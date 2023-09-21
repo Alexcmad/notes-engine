@@ -58,7 +58,7 @@ def generate_keywords_from_notes(notes: str) -> list:
     :param notes: The text to be analyzed
     :return: A list of keywords relevant to the notes uploaded
     """
-    with open("../static/keywords_context_notes", "r") as file:
+    with open("static/keywords_context_notes", "r") as file:
         context: str = file.read()
     if len(notes) > 500:
         notes = notes[:499]
