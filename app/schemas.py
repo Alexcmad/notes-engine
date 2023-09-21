@@ -15,3 +15,10 @@ class Wiki(BaseModel):
 class FileContent(BaseModel):
     filename: str
     content: str
+    keywords: str
+
+
+class GPTSummary(BaseModel):
+    title: str
+    summary: str
+    search_term: str

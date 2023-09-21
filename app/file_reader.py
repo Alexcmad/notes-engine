@@ -3,6 +3,7 @@ All File Reading functions go here
 """
 import textract
 import PyPDF2
+from .openAI import generate_keywords_from_notes
 
 
 def read_docx(docx_filename: str) -> dict:
@@ -10,8 +11,9 @@ def read_docx(docx_filename: str) -> dict:
     :param docx_filename: The filename (and location) of the .docx document
     :return: Dictionary containing filename and ext content of the .docx file
     """
-    text: bytes = textract.process(docx_filename)
-    return {"filename": docx_filename, "content": text.decode('utf-8')}
+    text: str = textract.process(docx_filename).decode('utf-8')
+    keywords = generate_keywords_from_notes(text)
+    return {"filename": docx_filename, "content": text, "keywords": keywords}
 
 
 def read_txt(txt_filename: str) -> dict:
@@ -21,7 +23,9 @@ def read_txt(txt_filename: str) -> dict:
     :return: Dictionary containing filename and ext content of the .txt file
     """
     with open(txt_filename, 'r') as file:
-        return {"filename": txt_filename, "content": file.read()}
+        text = file.read()
+        keywords = generate_keywords_from_notes(text)
+        return {"filename": txt_filename, "content": text, "keywords": keywords}
 
 
 def read_pdf(pdf_filename: str) -> dict:
@@ -35,4 +39,5 @@ def read_pdf(pdf_filename: str) -> dict:
         content = ''
         for page in pdf.pages:
             content += page.extract_text()
-    return {"filename": pdf_filename, "content": content}
+    keywords = generate_keywords_from_notes(content)
+    return {"filename": pdf_filename, "content": content, "keywords": keywords}

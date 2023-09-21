@@ -8,7 +8,6 @@ from fastapi import FastAPI, File, UploadFile
 from fastapi.staticfiles import StaticFiles
 from . import wiki, openAI, file_reader, schemas
 
-
 app = FastAPI()
 app.mount("/../static", StaticFiles(directory="static"))
 
@@ -36,13 +35,24 @@ def generate_terms(search_term: str) -> dict:
     :param search_term: The term being used to generate keywords
     :return: A json object containing a list of 10 keywords related to the search term
     """
-    generated_terms: dict = openAI.generate_keywords(search_term)
+    generated_terms: dict = openAI.generate_keywords_from_term(search_term)
     return generated_terms
+
+
+@app.get('/generate/summary/{keyword}/{search_term}', response_model=schemas.GPTSummary)
+def generate_summary(search_term: str, keyword: str) -> dict:
+    """
+
+    :param search_term: the context in which to generate the definition of the word
+    :param keyword:  whose definition you would like to receive
+    :return: A json containing a summary of the keyword in relation to the search term
+    """
+    generated_summary: dict = openAI.generate_summary(keyword=keyword, search_term=search_term)
+    return generated_summary
 
 
 @app.post('/upload', response_model=schemas.FileContent)
 def upload_file(file: UploadFile) -> dict:
-
     """
 
     :param file: the file to be uploaded
@@ -51,7 +61,7 @@ def upload_file(file: UploadFile) -> dict:
 
     ext: str = file.filename.split(".")[1]
 
-    extension_dict: dict ={
+    extension_dict: dict = {
         "pdf": file_reader.read_pdf,
         "docx": file_reader.read_docx,
         "doc": file_reader.read_docx,
