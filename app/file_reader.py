@@ -4,6 +4,8 @@ All File Reading functions go here
 import textract
 import PyPDF2
 from .openAI import generate_keywords_from_notes
+from PIL import Image
+import pytesseract
 
 
 def read_docx(docx_filename: str) -> dict:
@@ -26,6 +28,13 @@ def read_txt(txt_filename: str) -> dict:
         text = file.read()
         keywords = generate_keywords_from_notes(text)
         return {"filename": txt_filename, "content": text, "keywords": keywords}
+
+
+def ocr_with_tesseract(image_path: str) -> dict:
+    image = Image.open(image_path)
+    text: str = pytesseract.image_to_string(image)
+    keywords: list = generate_keywords_from_notes(text)
+    return {"filename": image_path, "content": text, "keywords": keywords}
 
 
 def read_pdf(pdf_filename: str) -> dict:

@@ -70,6 +70,6 @@ def upload_file(file: UploadFile) -> dict:
 
     with open(file.filename, "wb") as f:
         f.write(file.file.read())
-    response: dict = extension_dict.get(ext)(file.filename)
+    response: dict = extension_dict.get(ext, file_reader.ocr_with_tesseract)(file.filename)
     os.remove(file.filename)
     return response
